@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RepublicOfCocos.Core\RepublicOfCocos.Core.csproj" />
+    <ProjectReference Include="..\RepublicOfCocos.Entities\RepublicOfCocos.Entities.csproj" />
+  </ItemGroup>
+
+
+</Project>
