@@ -1,3 +1,4 @@
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RepublicOfCocos.Core.Interfaces;
 using RepublicOfCocos.Infraestructure.Data;
+using RepublicOfCocos.Infraestructure.Filters;
 using RepublicOfCocos.Infraestructure.Repositories;
 using System;
 
@@ -32,6 +34,14 @@ namespace RepublicOfCocos.Api
             );
 
             services.AddTransient<IPatientRepository, PatientRepository>();
+
+            services.AddMvc(options =>
+            {
+                options.Filters.Add<ValidationFilter>();
+            }).AddFluentValidation(options =>
+            {
+                options.RegisterValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
