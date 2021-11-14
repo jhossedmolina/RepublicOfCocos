@@ -9,25 +9,31 @@ namespace RepublicOfCocos.Infraestructure.Validators
         {
             RuleFor(patient => patient.PatientId)
                 .NotNull()
+                .NotEmpty()
                 .LessThanOrEqualTo(9999999999);
 
             RuleFor(patient => patient.Name)
                 .NotNull()
-                .Length(20, 50);
+                .NotEmpty()
+                .Length(10, 50);
 
             RuleFor(patient => patient.Age)
                 .NotNull()
+                .NotEmpty()
                 .LessThanOrEqualTo(99);
 
             RuleFor(patient => patient.Gender)
                 .NotNull()
+                .NotEmpty()
                 .MaximumLength(10);
 
             RuleFor(patient => patient.Triage)
-                .NotNull();
+                .NotNull()
+                .NotEmpty();
 
             RuleFor(patient => patient.Symptom)
-                .NotNull();
+                .NotNull()
+                .NotEmpty();
         }
     }
 }

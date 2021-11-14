@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace RepublicOfCocos.Core.Interfaces
 {
-    public interface IPatientRepository
+    public interface IPatientService
     {
         Task<IEnumerable<Patient>> GetPatients();
         Task<Patient> GetPatient(long id);

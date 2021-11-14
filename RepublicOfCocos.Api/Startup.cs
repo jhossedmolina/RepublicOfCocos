@@ -6,9 +6,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RepublicOfCocos.Core.Interfaces;
+using RepublicOfCocos.Core.Services;
 using RepublicOfCocos.Infraestructure.Data;
 using RepublicOfCocos.Infraestructure.Filters;
 using RepublicOfCocos.Infraestructure.Repositories;
+using RepublicOfCocos.Infraestructure.Validators;
 using System;
 
 namespace RepublicOfCocos.Api
@@ -34,6 +36,8 @@ namespace RepublicOfCocos.Api
             );
 
             services.AddTransient<IPatientRepository, PatientRepository>();
+            services.AddTransient<IPatientService, PatientService>();
+            services.AddTransient<ITriageValidator, TriageValidator>();
 
             services.AddMvc(options =>
             {

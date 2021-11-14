@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using RepublicOfCocos.Api.Responses;
 using RepublicOfCocos.Core.DTOs;
 using RepublicOfCocos.Core.Entities;
 using RepublicOfCocos.Core.Interfaces;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace RepublicOfCocos.Api.Controllers
@@ -13,37 +13,61 @@ namespace RepublicOfCocos.Api.Controllers
     [ApiController]
     public class PatientController : ControllerBase
     {
-        private readonly IPatientRepository _patientRepository;
+        private readonly IPatientService _patientService;
         private readonly IMapper _mapper;
-        public PatientController(IPatientRepository patientRepository, IMapper mapper)
+        public PatientController(IPatientService patientService, IMapper mapper)
         {
-             _patientRepository = patientRepository;
+            _patientService = patientService;
             _mapper = mapper;
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> GetPatients()
         {
-            var patients = await _patientRepository.GetPatients();
+            var patients = await _patientService.GetPatients();
             var patientsDTO = _mapper.Map<IEnumerable<PatientDTO>>(patients);
-
-            return Ok(patientsDTO);
+            var response = new ApiResponse<IEnumerable<PatientDTO>>(patientsDTO);
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPatient(long id)
         {
-            var patient = await _patientRepository.GetPatient(id);
+            var patient = await _patientService.GetPatient(id);
             var patientDTO = _mapper.Map<PatientDTO>(patient);
-            return Ok(patientDTO);
+            var response = new ApiResponse<PatientDTO>(patientDTO);
+            return Ok(response);
         }
 
         [HttpPost]
         public async Task<IActionResult> InsertPatients(PatientDTO patientDTO)
         {
             var patient = _mapper.Map<Patient>(patientDTO);
-            await _patientRepository.InsertPatients(patient);
-            return Ok(patient);
+
+            await _patientService.InsertPatients(patient);
+
+            patientDTO = _mapper.Map<PatientDTO>(patient);
+            var response = new ApiResponse<PatientDTO>(patientDTO);
+            return Ok(response);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdatePatient(long id, PatientDTO patientDTO)
+        {
+            var patient = _mapper.Map<Patient>(patientDTO);
+            patient.PatientId = id;
+
+            var result  = await _patientService.UpdatePatient(patient);
+            var response = new ApiResponse<bool>(result);
+            return Ok(response);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePatient(long id)
+        {
+            var result = await _patientService.DeletePatient(id);
+            var response = new ApiResponse<bool>(result);
+            return Ok(response);
         }
     }
 }

@@ -35,5 +35,26 @@ namespace RepublicOfCocos.Infraestructure.Repositories
             _context.Patient.Add(patients);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<bool> UpdatePatient(Patient patient)
+        {
+            var currentPatient = await GetPatient(patient.PatientId);
+            currentPatient.PatientId = patient.PatientId;
+            currentPatient.Name = patient.Name;
+            currentPatient.Age = patient.Age;
+            currentPatient.Gender = patient.Gender;
+            currentPatient.Symptom = patient.Symptom;
+
+            int  rows = await _context.SaveChangesAsync();
+            return rows > 0;         
+        }
+
+        public async Task<bool> DeletePatient(long id)
+        {
+            var result = await GetPatient(id);
+
+            int rows = await _context.SaveChangesAsync();
+            return rows > 0;
+        }
     }
 }
