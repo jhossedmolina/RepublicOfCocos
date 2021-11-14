@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using RepublicOfCocos.Core.Interfaces;
 using RepublicOfCocos.Infraestructure.Data;
 using RepublicOfCocos.Infraestructure.Repositories;
+using System;
 
 namespace RepublicOfCocos.Api
 {
@@ -22,6 +23,8 @@ namespace RepublicOfCocos.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddControllers();
 
             services.AddDbContext<RepublicOfCocosDBContext>(options =>
