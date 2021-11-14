@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RepublicOfCocos.Core.Interfaces;
+using RepublicOfCocos.Infraestructure.Data;
 using RepublicOfCocos.Infraestructure.Repositories;
 
 namespace RepublicOfCocos.Api
@@ -21,6 +23,10 @@ namespace RepublicOfCocos.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddDbContext<RepublicOfCocosDBContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("RepublicOfCocosDB"))
+            );
 
             services.AddTransient<IPatientRepository, PatientRepository>();
         }

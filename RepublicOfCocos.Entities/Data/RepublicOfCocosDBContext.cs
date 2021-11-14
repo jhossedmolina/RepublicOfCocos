@@ -1,9 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RepublicOfCocos.Core.Entities;
-
-// Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
-// If you have enabled NRTs for your project, then un-comment the following line:
-// #nullable disable
+using RepublicOfCocos.Infraestructure.Data.Configurations;
 
 namespace RepublicOfCocos.Infraestructure.Data
 {
@@ -23,44 +20,9 @@ namespace RepublicOfCocos.Infraestructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Patient>(entity =>
-            {
-                entity.Property(e => e.PatientId)
-                    .HasColumnName("PatientID")
-                    .ValueGeneratedNever();
+            modelBuilder.ApplyConfiguration(new PatientConfiguration());
 
-                entity.Property(e => e.Gender)
-                    .IsRequired()
-                    .HasMaxLength(10)
-                    .IsFixedLength();
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Symptom)
-                    .IsRequired()
-                    .HasMaxLength(300)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Triage)
-                    .IsRequired()
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<Surgery>(entity =>
-            {
-                entity.Property(e => e.SurgeryId)
-                    .HasColumnName("SurgeryID")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.DoctorName)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-            });
+            modelBuilder.ApplyConfiguration(new SurgeryConfiguration());       
 
             OnModelCreatingPartial(modelBuilder);
         }
