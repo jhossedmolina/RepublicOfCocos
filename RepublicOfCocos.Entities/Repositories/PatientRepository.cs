@@ -21,7 +21,25 @@ namespace RepublicOfCocos.Infraestructure.Repositories
         public async Task<IEnumerable<Patient>> GetPatients()
         {
             var patients = await _context.Patient.ToListAsync();
-            return patients;
+            
+            List<Patient> patientList1 = new List<Patient>();
+            List<Patient> patientList2 = new List<Patient>();
+            List<Patient> patientList3 = new List<Patient>();
+            List<Patient> patientList4 = new List<Patient>();
+
+            foreach (var element in patients)
+            {
+                if(element.Triage == "Atención inmediata") patientList1.Add(element);
+
+                else if (element.Triage == "Riesgo vital") patientList2.Add(element);
+
+                else if (element.Triage == "Urgencia menor") patientList3.Add(element);
+
+                else if (element.Triage == "No urgencia") patientList4.Add(element);
+            }
+
+            var patientList = patientList1.Concat(patientList2).Concat(patientList3).Concat(patientList4);
+            return patientList;
         }
 
         public async Task<Patient> GetPatient(long id)
