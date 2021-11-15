@@ -10,6 +10,8 @@ namespace RepublicOfCocos.Infraestructure.Mappings
         {
             CreateMap<Patient, PatientDTO>();
             CreateMap<PatientDTO, Patient>();
+            CreateMap<Surgery, SurgeryDTO>();
+            CreateMap<SurgeryDTO, Surgery>();
         }
     }
 }

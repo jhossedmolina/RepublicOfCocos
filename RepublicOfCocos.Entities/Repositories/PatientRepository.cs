@@ -2,7 +2,6 @@
 using RepublicOfCocos.Core.Entities;
 using RepublicOfCocos.Core.Interfaces;
 using RepublicOfCocos.Infraestructure.Data;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,13 +28,13 @@ namespace RepublicOfCocos.Infraestructure.Repositories
 
             foreach (var element in patients)
             {
-                if(element.Triage == "Atención inmediata") patientList1.Add(element);
+                if(element.Triage.Contains("Atención inmediata")) patientList1.Add(element);
 
-                else if (element.Triage == "Riesgo vital") patientList2.Add(element);
+                else if (element.Triage.Contains("Riesgo vital")) patientList2.Add(element);
 
-                else if (element.Triage == "Urgencia menor") patientList3.Add(element);
+                else if (element.Triage.Contains("Urgencia menor")) patientList3.Add(element);
 
-                else if (element.Triage == "No urgencia") patientList4.Add(element);
+                else if (element.Triage.Contains("No urgencia")) patientList4.Add(element);
             }
 
             var patientList = patientList1.Concat(patientList2).Concat(patientList3).Concat(patientList4);
@@ -70,6 +69,7 @@ namespace RepublicOfCocos.Infraestructure.Repositories
         public async Task<bool> DeletePatient(long id)
         {
             var result = await GetPatient(id);
+            _context.Patient.Remove(result);
 
             int rows = await _context.SaveChangesAsync();
             return rows > 0;

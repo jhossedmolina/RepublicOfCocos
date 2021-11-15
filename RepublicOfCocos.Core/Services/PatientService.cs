@@ -3,6 +3,7 @@ using RepublicOfCocos.Core.Exceptions;
 using RepublicOfCocos.Core.Interfaces;
 using RepublicOfCocos.Infraestructure.Validators;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RepublicOfCocos.Core.Services

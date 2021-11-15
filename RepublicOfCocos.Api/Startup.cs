@@ -37,6 +37,8 @@ namespace RepublicOfCocos.Api
 
             services.AddTransient<IPatientRepository, PatientRepository>();
             services.AddTransient<IPatientService, PatientService>();
+            services.AddTransient<ISurgeryRepository, SurgeryRepository>();
+            services.AddTransient<ISurgeryService, SurgeryService>();
             services.AddTransient<ITriageValidator, TriageValidator>();
 
             services.AddMvc(options =>
