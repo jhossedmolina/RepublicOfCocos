@@ -1,20 +1,26 @@
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RepublicOfCocos.Core.Interfaces;
 using RepublicOfCocos.Core.Services;
 using RepublicOfCocos.Infraestructure.Data;
 using RepublicOfCocos.Infraestructure.Filters;
+using RepublicOfCocos.Infraestructure.Interfaces;
+using RepublicOfCocos.Infraestructure.Options;
 using RepublicOfCocos.Infraestructure.Repositories;
+using RepublicOfCocos.Infraestructure.Services;
 using RepublicOfCocos.Infraestructure.Validators;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Text;
 
 namespace RepublicOfCocos.Api
 {
@@ -32,6 +38,8 @@ namespace RepublicOfCocos.Api
         {
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+            services.Configure<PasswordOptions>(Configuration.GetSection("PasswordOptions"));
+
             services.AddControllers();
 
             services.AddDbContext<RepublicOfCocosDBContext>(options =>
@@ -43,15 +51,64 @@ namespace RepublicOfCocos.Api
             services.AddTransient<ISurgeryRepository, SurgeryRepository>();
             services.AddTransient<ISurgeryService, SurgeryService>();
             services.AddTransient<ITriageValidator, TriageValidator>();
+            services.AddTransient<ISecurityRepository, SecurityRepository>();
+            services.AddTransient<ISecurityService, SecurityService>();
+            services.AddTransient<IPasswordService, PasswordService>();
+
 
             services.AddSwaggerGen(doc =>
             {
                 doc.SwaggerDoc("v1", new OpenApiInfo { Title = "Republic Of Cocos API", Version = "V1" });
+                doc.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Por favor ingrese su Token de acceso",
+                    Name = "Autorizacion",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "bearer"
+                });
+                doc.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[]
+                        {
+
+                        }
+                    }
+                });
 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 doc.IncludeXmlComments(xmlPath);
             });
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = Configuration["Authentication:Issuer"],
+                    ValidAudience = Configuration["Authentication:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authentication:SecretKey"]))
+                };
+            });
+
 
             services.AddMvc(options =>
             {
@@ -81,6 +138,7 @@ namespace RepublicOfCocos.Api
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

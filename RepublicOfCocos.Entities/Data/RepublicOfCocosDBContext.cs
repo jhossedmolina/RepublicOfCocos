@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RepublicOfCocos.Core.Entities;
-using RepublicOfCocos.Infraestructure.Data.Configurations;
+using System.Reflection;
 
 namespace RepublicOfCocos.Infraestructure.Data
 {
@@ -18,15 +18,11 @@ namespace RepublicOfCocos.Infraestructure.Data
         public virtual DbSet<Patient> Patient { get; set; }
         public virtual DbSet<Surgery> Surgery { get; set; }
 
+        public virtual DbSet<Security> Security { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new PatientConfiguration());
-
-            modelBuilder.ApplyConfiguration(new SurgeryConfiguration());       
-
-            OnModelCreatingPartial(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
-
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

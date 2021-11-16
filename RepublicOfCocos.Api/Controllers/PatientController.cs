@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RepublicOfCocos.Api.Responses;
 using RepublicOfCocos.Core.DTOs;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace RepublicOfCocos.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PatientController : ControllerBase
@@ -21,6 +23,10 @@ namespace RepublicOfCocos.Api.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Obtiene toda la lista de pacientes
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetPatients()
         {
@@ -39,6 +45,12 @@ namespace RepublicOfCocos.Api.Controllers
             return Ok(response);
         }
 
+
+        /// <summary>
+        /// Inserta un nuevo paciente
+        /// </summary>
+        /// <param name="patientDTO"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> InsertPatients(PatientDTO patientDTO)
         {

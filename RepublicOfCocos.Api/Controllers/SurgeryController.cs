@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RepublicOfCocos.Api.Responses;
 using RepublicOfCocos.Core.DTOs;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace RepublicOfCocos.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SurgeryController : ControllerBase
@@ -39,6 +41,12 @@ namespace RepublicOfCocos.Api.Controllers
             return Ok(response);
         }
 
+
+        /// <summary>
+        /// Crea un nuevo consultorio
+        /// </summary>
+        /// <param name="surgeryDTO"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> InsertSurgerys(SurgeryDTO surgeryDTO)
         {
@@ -62,6 +70,11 @@ namespace RepublicOfCocos.Api.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Elimina un consultorio
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSurgery(int id)
         {
