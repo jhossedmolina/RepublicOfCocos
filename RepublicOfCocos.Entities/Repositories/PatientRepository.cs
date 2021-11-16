@@ -28,7 +28,11 @@ namespace RepublicOfCocos.Infraestructure.Repositories
 
             foreach (var element in patients)
             {
-                if(element.Triage.Contains("Atención inmediata")) patientList1.Add(element);
+                if(element.Triage.Contains("Atención inmediata"))
+                {
+                    patientList1.Add(element);
+                }
+                    
 
                 else if (element.Triage.Contains("Riesgo vital")) patientList2.Add(element);
 

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using RepublicOfCocos.Core.Interfaces;
 using RepublicOfCocos.Core.Services;
 using RepublicOfCocos.Infraestructure.Data;
@@ -12,6 +13,8 @@ using RepublicOfCocos.Infraestructure.Filters;
 using RepublicOfCocos.Infraestructure.Repositories;
 using RepublicOfCocos.Infraestructure.Validators;
 using System;
+using System.IO;
+using System.Reflection;
 
 namespace RepublicOfCocos.Api
 {
@@ -41,6 +44,15 @@ namespace RepublicOfCocos.Api
             services.AddTransient<ISurgeryService, SurgeryService>();
             services.AddTransient<ITriageValidator, TriageValidator>();
 
+            services.AddSwaggerGen(doc =>
+            {
+                doc.SwaggerDoc("v1", new OpenApiInfo { Title = "Republic Of Cocos API", Version = "V1" });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                doc.IncludeXmlComments(xmlPath);
+            });
+
             services.AddMvc(options =>
             {
                 options.Filters.Add<ValidationFilter>();
@@ -59,6 +71,13 @@ namespace RepublicOfCocos.Api
             }
 
             app.UseHttpsRedirection();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(options => 
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Republic Of Cocos API V1");
+                options.RoutePrefix = string.Empty;
+            });
 
             app.UseRouting();
 

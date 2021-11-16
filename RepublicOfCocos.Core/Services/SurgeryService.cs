@@ -38,5 +38,7 @@ namespace RepublicOfCocos.Core.Services
         {
             return await _surgeryRepository.DeleteSurgery(id);
         }
+
+
     }
 }

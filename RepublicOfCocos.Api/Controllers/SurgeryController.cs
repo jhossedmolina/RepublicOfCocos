@@ -31,11 +31,11 @@ namespace RepublicOfCocos.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetPatient(int id)
+        public async Task<IActionResult> GetSurgery(int id)
         {
             var surgery = await _surgeryService.GetSurgery(id);
-            var surgeryDTO = _mapper.Map<PatientDTO>(surgery);
-            var response = new ApiResponse<PatientDTO>(surgeryDTO);
+            var surgeryDTO = _mapper.Map<SurgeryDTO>(surgery);
+            var response = new ApiResponse<SurgeryDTO>(surgeryDTO);
             return Ok(response);
         }
 
